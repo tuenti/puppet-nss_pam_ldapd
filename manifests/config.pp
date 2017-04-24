@@ -42,18 +42,20 @@
 #
 class nss_pam_ldapd::config (
   $ldap = hiera('nss_pam_ldapd::config::ldap', {
-        uri           => [ 'ldap://localhost', ],
-        base           => 'dc=example,dc=com',
-        ssl            => 'start_tls',
-        tls_checkpeer  => 'no',
-        tls_cacertdir  => undef,
-        tls_reqcert    => 'never',
-        timelimit      => 120,
-        bind_timelimit => 120,
-        idle_timelimit => 3600,
-        binddn         => undef,
-        bindpw         => undef
-      }),
+    uri           => [ 'ldap://localhost', ],
+    base           => 'dc=example,dc=com',
+    ssl            => 'start_tls',
+    tls_checkpeer  => 'no',
+    tls_cacertdir  => undef,
+    tls_reqcert    => 'never',
+    timelimit      => 120,
+    bind_timelimit => 120,
+    idle_timelimit => 3600,
+    binddn         => undef,
+    bindpw         => undef,
+    homeDirectory  => undef,
+    loginShell     => undef
+    }),
   $template = undef
   ) {
 
@@ -138,6 +140,14 @@ class nss_pam_ldapd::config (
         true    => "set bindpw '${ldap['bindpw']}'",
         default => undef,
       }
+  $aug_home_directory = has_key($ldap, 'homeDirectory') ? {
+        true    => "set 'map passwd homeDirectory' '${ldap['homeDirectory']}'",
+        default => undef,
+      }
+  $aug_login_shell = has_key($ldap, 'loginShell') ? {
+        true    => "set 'map passwd loginShell' '${ldap['loginShell']}'",
+        default => undef,
+      }
 
   $augeas_changes = delete_undef_values(grep([
       $aug_uri,
@@ -150,7 +160,9 @@ class nss_pam_ldapd::config (
       $aug_bind_timelimit,
       $aug_idle_timelimit,
       $aug_binddn,
-      $aug_bindpw
+      $aug_bindpw,
+      $aug_home_directory,
+      $aug_login_shell
   ], '.'))
 
   file { '/etc/nslcd.conf':

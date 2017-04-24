@@ -140,10 +140,27 @@ class nss_pam_ldapd::config (
         true    => "set bindpw '${ldap['bindpw']}'",
         default => undef,
       }
+
+  $aug_scope = has_key($ldap, 'scope') ? {
+       true    => "set scope '${ldap['scope']}'",
+       default => undef,
+      }
+
+  $aug_pagesize = has_key($ldap, 'pagesize') ? {
+       true    => "set pagesize '${ldap['pagesize']}'",
+       default => undef,
+      }
+
+  $aug_auth_search = has_key($ldap, 'auth_search') ? {
+        true    => "set pam_auth_search '${ldap['auth_search']}'",
+        default => undef,
+      }
+
   $aug_home_directory = has_key($ldap, 'homeDirectory') ? {
         true    => "set 'map passwd homeDirectory' '${ldap['homeDirectory']}'",
         default => undef,
-      }
+       }
+
   $aug_login_shell = has_key($ldap, 'loginShell') ? {
         true    => "set 'map passwd loginShell' '${ldap['loginShell']}'",
         default => undef,
@@ -162,7 +179,10 @@ class nss_pam_ldapd::config (
       $aug_binddn,
       $aug_bindpw,
       $aug_home_directory,
-      $aug_login_shell
+      $aug_login_shell,
+      $aug_scope,
+      $aug_pagesize,
+      $aug_auth_search
   ], '.'))
 
   file { '/etc/nslcd.conf':

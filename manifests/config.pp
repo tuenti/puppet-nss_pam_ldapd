@@ -46,7 +46,7 @@ class nss_pam_ldapd::config (
         base           => 'dc=example,dc=com',
         ssl            => 'start_tls',
         tls_checkpeer  => 'no',
-        tls_cacertdir  => '/etc/openldap/cacerts',
+        tls_cacertdir  => undef,
         tls_reqcert    => 'never',
         timelimit      => 120,
         bind_timelimit => 120,

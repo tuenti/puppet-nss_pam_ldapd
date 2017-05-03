@@ -195,6 +195,6 @@ class nss_pam_ldapd::config (
     lens      => 'nslcd.aug',
     incl      => '/etc/nslcd.conf',
     changes   => $augeas_changes,
-    load_path => "/usr/share/augeas/lenses:${settings::vardir}/augeas/lenses",
+    load_path => "/usr/share/augeas/lenses:${settings::vardir}/lib/augeas/lenses",
   }
 }

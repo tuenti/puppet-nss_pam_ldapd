@@ -192,7 +192,7 @@ class nss_pam_ldapd::config (
   }
 
   augeas { '/etc/nslcd.conf':
-    lens      => 'Spacevars.lns',
+    lens      => 'nslcd.aug',
     incl      => '/etc/nslcd.conf',
     changes   => $augeas_changes,
     load_path => "/usr/share/augeas/lenses:${settings::vardir}/augeas/lenses",

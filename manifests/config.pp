@@ -42,19 +42,20 @@
 #
 class nss_pam_ldapd::config (
   $ldap = hiera('nss_pam_ldapd::config::ldap', {
-    uri           => [ 'ldap://localhost', ],
-    base           => 'dc=example,dc=com',
-    ssl            => 'start_tls',
-    tls_checkpeer  => 'no',
-    tls_cacertdir  => undef,
-    tls_reqcert    => 'never',
-    timelimit      => 120,
-    bind_timelimit => 120,
-    idle_timelimit => 3600,
-    binddn         => undef,
-    bindpw         => undef,
-    homeDirectory  => undef,
-    loginShell     => undef
+    uri              => [ 'ldap://localhost', ],
+    base             => 'dc=example,dc=com',
+    ssl              => 'start_tls',
+    tls_checkpeer    => 'no',
+    tls_cacertdir    => undef,
+    tls_reqcert      => 'never',
+    timelimit        => 120,
+    bind_timelimit   => 120,
+    idle_timelimit   => 3600,
+    binddn           => undef,
+    bindpw           => undef,
+    homeDirectory    => undef,
+    loginShell       => undef
+    pam_authz_search => undef,
     }),
   $template = undef
   ) {
@@ -151,8 +152,8 @@ class nss_pam_ldapd::config (
        default => undef,
       }
 
-  $aug_auth_search = has_key($ldap, 'auth_search') ? {
-        true    => "set pam_auth_search '${ldap['auth_search']}'",
+  $aug_pam_authz_search = has_key($ldap, 'pam_authz_search') ? {
+        true    => "set pam_authz_search '${ldap['pam_authz_search']}'",
         default => undef,
       }
 
@@ -165,7 +166,6 @@ class nss_pam_ldapd::config (
         true    => "set map '\"passwd loginShell ${ldap['loginShell']}'\"",
         default => undef,
       }
-
   $augeas_changes = delete_undef_values(grep([
       $aug_uri,
       $aug_base,
@@ -182,7 +182,7 @@ class nss_pam_ldapd::config (
       $aug_login_shell,
       $aug_scope,
       $aug_pagesize,
-      $aug_auth_search
+      $aug_pam_authz_search
   ], '.'))
 
   file { '/etc/nslcd.conf':

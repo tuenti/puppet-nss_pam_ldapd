@@ -186,14 +186,15 @@ class nss_pam_ldapd::config (
   ], '.'))
 
   file { '/etc/nslcd.conf':
-    mode    => '0400',
-    owner   => 'root',
-    group   => 'root',
+    mode      => '0400',
+    owner     => 'root',
+    group     => 'root',
   }
 
   augeas { '/etc/nslcd.conf':
-    lens    => 'Spacevars.lns',
-    incl    => '/etc/nslcd.conf',
-    changes => $augeas_changes,
+    lens      => 'Spacevars.lns',
+    incl      => '/etc/nslcd.conf',
+    changes   => $augeas_changes,
+    load_path => "/usr/share/augeas/lenses:${settings::vardir}/augeas/lenses",
   }
 }

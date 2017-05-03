@@ -54,7 +54,7 @@ class nss_pam_ldapd::config (
     binddn           => undef,
     bindpw           => undef,
     homeDirectory    => undef,
-    loginShell       => undef
+    loginShell       => undef,
     pam_authz_search => undef,
     }),
   $template = undef

@@ -163,7 +163,7 @@ class nss_pam_ldapd::config (
        }
 
   $aug_login_shell = has_key($ldap, 'loginShell') ? {
-        true    => "set map[passwd/loginShell]/passwd/loginShell ${ldap['loginShell']}",
+        true    => "set map[passwd/loginShell]/passwd/loginShell '${ldap['loginShell']}'",
         default => undef,
       }
   $augeas_changes = delete_undef_values(grep([

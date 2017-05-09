@@ -158,7 +158,7 @@ class nss_pam_ldapd::config (
       }
 
   $aug_home_directory = has_key($ldap, 'homeDirectory') ? {
-        true    => "set map[passwd/homeDirectory]/passwd/homeDirectory ${ldap['homeDirectory']}",
+        true    => "set map[passwd/homeDirectory]/passwd/homeDirectory '${ldap['homeDirectory']}'",
         default => undef,
        }
 

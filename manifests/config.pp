@@ -83,7 +83,7 @@ class nss_pam_ldapd::config (
     $aug_uri_clean = ['rm uri/*']
 
     # Index the uris. This will get [[1, url1], [2, url2], [3, url3]]
-    $indexed_uri = zip(range(1, size($url)), $url)
+    $indexed_uri = zip(range(1, size($uri)), $uri)
 
     # Create a new Array with al the augeas operations
     $aug_uri = $indexed_uri.reduce($aug_uri_clean) |$result, $value| {

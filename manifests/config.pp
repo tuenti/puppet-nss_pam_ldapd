@@ -79,6 +79,8 @@ class nss_pam_ldapd::config (
   # uri
   if has_key($ldap, 'uri') {
 
+    $uri = $ldap['uri']
+
     # Clean the current values first
     $aug_uri_clean = ['rm uri/*']
 

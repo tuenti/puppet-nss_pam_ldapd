@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pp'
 
 describe 'nss_pam_ldapd::config' do
   let(:facts) {{ :osfamily => 'redhat' }}
@@ -13,11 +14,12 @@ describe 'nss_pam_ldapd::config' do
     }
 
     it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([
-                      %q{set uri 'ldap://localhost'},
-                      %q{set base 'dc=example,dc=com'},
+                  .with_changes([
+                      %q{rm uri/*},
+                      %q{set uri/1 'ldap://localhost'},
+                      %q{rm base/*},
+                      %q{set base[last()+1] 'dc=example,dc=com'},
                       %q{set ssl 'start_tls'},
-                      %q{set tls_checkpeer 'no'},
                       %q{set tls_cacertdir '/etc/openldap/cacerts'},
                       %q{set tls_reqcert 'never'},
                       %q{set timelimit '120'},
@@ -32,7 +34,7 @@ describe 'nss_pam_ldapd::config' do
     lp = {
       'uri'           => ['ldap://ldap1.example.com',
                            'ldap://ldap2.example.com' ],
-      'base'           => 'o=example org,c=us',
+      'base'           => { 'global' => ['o=example org,c=us'] },
       'ssl'            => 'broken',
       'tls_checkpeer'  => 'yes',
       'tls_cacertdir'  => '/etc/pki/tls',
@@ -46,10 +48,12 @@ describe 'nss_pam_ldapd::config' do
 
     it { should contain_augeas('/etc/nslcd.conf') \
       .with_changes([
-                      %Q<set uri '#{lp['uri'].join(' ')}'>,
-                      %Q<set base '#{lp['base']}'>,
+                      %Q<rm uri/*>,
+                      %Q<set uri/1 '#{lp['uri'][0]}'>,
+                      %Q<set uri/2 '#{lp['uri'][1]}'>,
+                      %Q<rm base/*>,
+                      %Q<set base[last()+1] '#{lp['base']['global'][0]}'>,
                       %Q<set ssl '#{lp['ssl']}'>,
-                      %Q<set tls_checkpeer '#{lp['tls_checkpeer']}'>,
                       %Q<set tls_cacertdir '#{lp['tls_cacertdir']}'>,
                       %Q<set tls_reqcert '#{lp['tls_reqcert']}'>,
                       %Q<set timelimit '#{lp['timelimit']}'>,
@@ -73,70 +77,14 @@ describe 'nss_pam_ldapd::config' do
     let(:params) {{ :ldap => { 'uri' => ['ldap://ldap1 ldap://ldap2'] } }}
 
     it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([ %q<set uri 'ldap://ldap1 ldap://ldap2'> ])
+      .with_changes([
+                     %q<rm uri/*>,
+                     %q<set uri/1 'ldap://ldap1 ldap://ldap2'>,
+                     ])
     }
 
   end
 
-  context 'uri param as string' do
-
-    let(:params) {{ :ldap => { 'uri' => 'ldap://ldap1 ldap://ldap2' } }}
-
-    it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([ %q<set uri 'ldap://ldap1 ldap://ldap2'> ])
-    }
-
-  end
-
-  context 'compat param uris: only uris' do
-
-    let(:params) {{ :ldap => { 'uris' => ['ldap://ldap1', 'ldap://ldap2'] } }}
-
-    it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([ %q<set uri 'ldap://ldap1 ldap://ldap2'> ])
-    }
-
-  end
-
-  context 'compat param uris: uri wins' do
-
-    let(:params) {{
-      :ldap    => {
-        'uri'  => ['ldap://ldap1', 'ldap://ldap2'],
-        'uris' => ['ldap://ldap3', 'ldap://ldap4'],
-      }
-    }}
-
-    it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([ %q<set uri 'ldap://ldap1 ldap://ldap2'> ])
-    }
-
-  end
-
-  context 'compat param basedn: only basedn' do
-
-    let(:params) {{ :ldap => { 'basedn' => 'o=foo org' } }}
-
-    it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([ %q<set base 'o=foo org'> ])
-    }
-
-  end
-
-  context 'compat param basedn: base wins' do
-
-    let(:params) {{
-      :ldap      => {
-        'basedn' => 'o=foo org',
-        'base'   => 'o=bar',
-      }
-    }}
-
-    it { should contain_augeas('/etc/nslcd.conf') \
-      .with_changes([ %q<set base 'o=bar'> ])
-    }
-
-  end
 
 
 end

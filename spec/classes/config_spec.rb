@@ -16,7 +16,7 @@ describe 'nss_pam_ldapd::config' do
     it { should contain_augeas('/etc/nslcd.conf') \
                   .with_changes([
                       %q{rm uri/*},
-                      %q{set uri/1 'ldap://localhost'},
+                      %q{set uri[1]/1 'ldap://localhost'},
                       %q{rm base/*},
                       %q{set base[last()+1] 'dc=example,dc=com'},
                       %q{set ssl 'start_tls'},
@@ -49,8 +49,8 @@ describe 'nss_pam_ldapd::config' do
     it { should contain_augeas('/etc/nslcd.conf') \
       .with_changes([
                       %Q<rm uri/*>,
-                      %Q<set uri/1 '#{lp['uri'][0]}'>,
-                      %Q<set uri/2 '#{lp['uri'][1]}'>,
+                      %Q<set uri[1]/1 '#{lp['uri'][0]}'>,
+                      %Q<set uri[2]/1 '#{lp['uri'][1]}'>,
                       %Q<rm base/*>,
                       %Q<set base[last()+1] '#{lp['base']['global'][0]}'>,
                       %Q<set ssl '#{lp['ssl']}'>,
@@ -79,7 +79,8 @@ describe 'nss_pam_ldapd::config' do
     it { should contain_augeas('/etc/nslcd.conf') \
       .with_changes([
                      %q<rm uri/*>,
-                     %q<set uri/1 'ldap://ldap1 ldap://ldap2'>,
+                     %q<set uri[1]/1 'ldap://ldap1'>,
+                     %q<set uri[1]/2 'ldap://ldap2'>
                      ])
     }
 

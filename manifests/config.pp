@@ -89,8 +89,11 @@ class nss_pam_ldapd::config (
 
     # Create a new Array with al the augeas operations
     $aug_uri = $indexed_uri.reduce($aug_uri_clean) |$result, $value| {
-      concat($result, "set uri/${value[0]} '${value[1]}'")
+      zip(range(1, size($value[1].split(' '))), $value[1].split(' ')).reduce($result) | $inner_result, $inner_value | {
+        concat($inner_result, "set uri[${value[0]}]/${inner_value[0]} '${inner_value[1]}'")
+      }
     }
+
   } else {
     $aug_uri = undef
   }

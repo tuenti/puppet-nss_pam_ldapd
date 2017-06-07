@@ -436,8 +436,8 @@ class nss_pam_ldapd::config (
   if has_key($ldap, 'map') and $ldap['map'] != undef {
     $map = $ldap['map']
 
-    # Clean the current values first
-    $aug_map_clean = ['rm map/*']
+    # Empty.
+    $aug_map_clean = []
 
     # Process maps
     $aug_map_temp = $map.map | $map_expressions| {

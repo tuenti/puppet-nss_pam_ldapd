@@ -442,7 +442,7 @@ class nss_pam_ldapd::config (
     # Process maps
     $aug_map_temp = $map.map | $map_expressions| {
       $map_expressions[1].map |$value| {
-        "set map/${map_expressions[0]}/${value[0]} '${value[1]}'"
+        "set map[${map_expressions[0]}/${value[0]}]/${map_expressions[0]}/${value[0]} '${value[1]}'"
       }
     }
     # Merge all

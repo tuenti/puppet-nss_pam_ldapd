@@ -103,7 +103,7 @@ class nss_pam_ldapd::config (
     $base = $ldap['base']
 
     # Clean the current values first
-    $aug_base_clean = ['rm base/*']
+    $aug_base_clean = ['rm base']
 
     # Process global keys
     if has_key($base, 'global') {
@@ -133,7 +133,7 @@ class nss_pam_ldapd::config (
     $scope = $ldap['scope']
 
     # Clean the current values first
-    $aug_scope_clean = ['rm scope/*']
+    $aug_scope_clean = ['rm scope']
 
     # Process global values first
     if has_key($scope, 'global') {

@@ -339,7 +339,7 @@ class nss_pam_ldapd::config (
     $nss_initgroups_ignoreusers = $ldap['nss_initgroups_ignoreusers']
 
     # Clean the current values first
-    $aug_initgroups_ignoreusers_clean = ['rm nss_initgroups_ignoreusers/*']
+    $aug_initgroups_ignoreusers_clean = ['rm nss_initgroups_ignoreusers']
 
     # Create a new array with all the augeas operations
     $aug_nss_initgroups_ignoreusers_expr = $nss_initgroups_ignoreusers.map |$index, $value| {

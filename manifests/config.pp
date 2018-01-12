@@ -335,9 +335,22 @@ class nss_pam_ldapd::config (
   }
 
   # nss_initgroups_ignoreusers
-  $aug_nss_initgroups_ignoreusers = (has_key($ldap, 'nss_initgroups_ignoreusers') and $ldap['nss_initgroups_ignoreusers'] != undef) ? {
-    true    => "set nss_initgroups_ignoreusers '${ldap['nss_initgroups_ignoreusers']}'",
-    default => undef,
+  if has_key($ldap, 'nss_initgroups_ignoreusers') and $ldap['nss_initgroups_ignoreusers'] != undef {
+    $nss_initgroups_ignoreusers = $ldap['nss_initgroups_ignoreusers']
+
+    # Clean the current values first
+    $aug_initgroups_ignoreusers_clean = ['rm nss_initgroups_ignoreusers/*']
+
+    # Create a new array with all the augeas operations
+    $aug_nss_initgroups_ignoreusers_expr = $nss_initgroups_ignoreusers.map |$index, $value| {
+      "set nss_initgroups_ignoreusers/${index} ${value}"
+    }
+
+    # Merge all
+    $aug_nss_initgroups_ignoreusers = concat($aug_initgroups_ignoreusers_clean, $aug_nss_initgroups_ignoreusers_expr)
+
+  } else {
+    $aug_nss_initgroups_ignoreusers = undef
   }
 
   # nss_min_uid

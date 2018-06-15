@@ -4,5 +4,6 @@ class nss_pam_ldapd::service {
     hasstatus  => true,
     hasrestart => true,
     enable     => true,
+    subscribe  => Augeas['/etc/nslcd.conf']
   }
 }

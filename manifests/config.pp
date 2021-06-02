@@ -24,7 +24,7 @@
 #
 #
 class nss_pam_ldapd::config (
-  $ldap = hiera('nss_pam_ldapd::config::ldap', {
+  $ldap = lookup('nss_pam_ldapd::config::ldap', Hash, undef, {
     uri                           => [ 'ldap://localhost', ],
     base                          => { global => ['dc=example,dc=com'] },
     scope                         => undef,

@@ -466,7 +466,7 @@ class nss_pam_ldapd::config (
   }
 
 
-  $augeas_changes = delete_undef_values(flatten([
+  $augeas_changes = flatten([
     $aug_uri,
     $aug_base,
     $aug_scope,
@@ -515,7 +515,7 @@ class nss_pam_ldapd::config (
     $aug_pam_authz_search,
     $aug_filter,
     $aug_map,
-  ]))
+  ]).filter |$key, $val| { $val =~ NotUndef }
 
   file { '/etc/nslcd.conf':
     mode  => '0400',
